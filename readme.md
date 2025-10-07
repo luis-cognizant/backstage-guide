@@ -31,6 +31,7 @@ This workshop is organized into focused modules for easier navigation and mainte
 
 ### Workshop Support
 - **[Command Cheatsheet](./docs/command_cheatsheet.md)** - Quick reference with copy-pasteable commands
+- **[GitHub Permissions Guide](./docs/github_permissions_guide.md)** - Complete reference for GitHub App and token permissions
 - **[Visual Diagrams](./docs/diagrams.md)** - Architecture and workflow diagrams
 - **[Workshop Facilitation Guide](./docs/workshop_facilitation.md)** - Tips for workshop leaders
 - **[FAQ & Troubleshooting](./docs/faq_troubleshooting.md)** - Common issues and solutions
