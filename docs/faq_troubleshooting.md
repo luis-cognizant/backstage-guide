@@ -1,7 +1,7 @@
 ## FAQ
 
 **Q: What is the `PROJECT_ID`, and where do I find it?**  
-A: The `PROJECT_ID` is the unique identifier for your Google Cloud Platform (GCP) project, used in commands like `gcloud` and for Docker images (e.g., `gcr.io/[PROJECT_ID]/backstage`). Find it in the GCP Console (top-left project dropdown) or run `gcloud projects list`. Example: `my-backstage-project-123`. Set it with `gcloud config set project [PROJECT_ID]`.
+A: The `PROJECT_ID` is the unique identifier for your Google Cloud Platform (GCP) project, used in commands like `gcloud` and for Docker images (e.g., `us-central1-docker.pkg.dev/[PROJECT_ID]/backstage-repo/backstage`). Find it in the GCP Console (top-left project dropdown) or run `gcloud projects list`. Example: `my-backstage-project-123`. Set it with `gcloud config set project [PROJECT_ID]`. See the [main workshop guide](../readme.md) for detailed setup instructions.
 
 **Q: Why use a GitHub App instead of a Personal Access Token (PAT)?**  
 A: A GitHub App is more secure because it offers fine-grained permissions, can be restricted to specific repositories, and supports webhook integration. PATs are user-specific, have broader access, and are less manageable for teams. For the workshop demo, a PAT is simpler, but GitHub Apps are recommended for production.
@@ -40,7 +40,7 @@ A: Yes! Modify `packages/app/src/components/catalog/EntityPage.tsx` for custom t
   - Wait 5-10 minutes for the LoadBalancer IP to provision.  
   - Check service status: `kubectl describe service backstage-service`. Ensure `type: LoadBalancer`.  
   - Verify deployment: `kubectl get pods`. If pods are crashing, check logs: `kubectl logs [POD_NAME]`.  
-  - Ensure `backstage-deployment.yaml` uses the correct `gcr.io/[PROJECT_ID]/backstage` image.  
+  - Ensure `backstage-deployment.yaml` uses the correct `us-central1-docker.pkg.dev/[PROJECT_ID]/backstage-repo/backstage` image.  
   - For Cloud Run, confirm `--allow-unauthenticated` and check the service URL.  
 - **Facilitator Tip:** Show `kubectl get services` on your screen. Help participants debug by sharing pod logs if needed.
 

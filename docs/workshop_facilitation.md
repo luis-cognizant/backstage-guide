@@ -1,5 +1,7 @@
 # Workshop Facilitation
 
+This guide provides additional insights for facilitators running the [Backstage Workshop](../readme.md). It covers common issues, limitations, and practical tips for managing group sessions effectively.
+
 ## Additional Insights: Quirks, Gotchas, and Limitations of Backstage
 
 ### Quirks and Gotchas
