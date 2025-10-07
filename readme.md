@@ -30,6 +30,7 @@ This workshop is organized into focused modules for easier navigation and mainte
 7. **[LLM Integrations with LangChain](./docs/llm_integrations.md)** - AI-powered analysis and automated actions (Optional advanced topic)
 
 ### Workshop Support
+- **[Command Cheatsheet](./docs/command_cheatsheet.md)** - Quick reference with copy-pasteable commands
 - **[Visual Diagrams](./docs/diagrams.md)** - Architecture and workflow diagrams
 - **[Workshop Facilitation Guide](./docs/workshop_facilitation.md)** - Tips for workshop leaders
 - **[FAQ & Troubleshooting](./docs/faq_troubleshooting.md)** - Common issues and solutions
@@ -65,7 +66,102 @@ If you want to jump straight into the hands-on work:
 2. **Then:** [GitHub Integration](./docs/github_integration.md) - Connect to GitHub and enable plugins
 3. **Next:** [Component Registration](./docs/component_registration.md) - Add your first component
 
+**📋 Need commands quickly?** Check the [Command Cheatsheet](./docs/command_cheatsheet.md) for copy-pasteable commands.
+
 For visual learners, check out the [diagrams](./docs/diagrams.md) to understand the architecture and workflow.
+
+## Authentication Providers
+
+Backstage supports multiple authentication providers to secure your developer portal. While this workshop focuses on GitHub integration, understanding authentication options is crucial for production deployments.
+
+### Supported Authentication Methods
+
+Backstage supports various authentication providers:
+- **OAuth2 Providers:** Google, GitHub, GitLab, Microsoft Azure AD, Okta
+- **OIDC (OpenID Connect):** Auth0, AWS Cognito, Keycloak
+- **SAML:** Enterprise identity providers
+- **Custom Providers:** Custom authentication implementations
+
+### Google Cloud Authentication Example
+
+Since this workshop uses Google Cloud, here's how you would configure Google OAuth2 authentication:
+
+**1. Set up Google OAuth2 Application:**
+```bash
+# In Google Cloud Console → APIs & Credentials → Create OAuth2 Client
+# Application Type: Web Application
+# Authorized Redirect URIs: https://your-backstage-domain/api/auth/google/handler/frame
+```
+
+**2. Configure Backstage (`app-config.yaml`):**
+```yaml
+auth:
+  environment: production
+  providers:
+    google:
+      production:
+        clientId: ${GOOGLE_CLIENT_ID}
+        clientSecret: ${GOOGLE_CLIENT_SECRET}
+        # Optional: restrict to specific domains
+        hostedDomain: your-company.com
+```
+
+**3. Set Environment Variables:**
+```bash
+export GOOGLE_CLIENT_ID="your-client-id"
+export GOOGLE_CLIENT_SECRET="your-client-secret"
+```
+
+### Authentication Flow
+
+The authentication process in Backstage follows this pattern:
+1. User accesses Backstage URL
+2. Backstage redirects to authentication provider (e.g., Google)
+3. User authenticates with provider
+4. Provider redirects back to Backstage with authorization code
+5. Backstage exchanges code for user profile and tokens
+6. User session is established with role-based permissions
+
+For a visual representation of this flow, see the [Authentication Flow Diagram](./docs/diagrams.md#authentication-flow).
+
+### Production Considerations
+
+**Security Best Practices:**
+- Use HTTPS in production (configure TLS certificates)
+- Set secure session cookies with appropriate domain restrictions
+- Configure CORS properly for your domain
+- Use environment variables for secrets (never commit credentials)
+- Implement proper logout and session timeout
+
+**Google Cloud Integration:**
+- Use Google Cloud IAM for fine-grained access control
+- Consider Google Cloud Identity for enterprise SSO
+- Leverage Cloud KMS for managing authentication secrets
+- Use Cloud Armor for additional security protection
+
+**Configuration Example for Production:**
+```yaml
+auth:
+  environment: production
+  session:
+    secret: ${SESSION_SECRET}  # Generate a strong secret
+  providers:
+    google:
+      production:
+        clientId: ${GOOGLE_CLIENT_ID}
+        clientSecret: ${GOOGLE_CLIENT_SECRET}
+        hostedDomain: your-company.com
+        scope: 'openid email profile'
+
+backend:
+  cors:
+    origin: https://your-backstage-domain.com
+    credentials: true
+```
+
+### Workshop Note
+
+For this workshop, we'll use GitHub integration without full authentication setup to keep things simple. In production, you should always implement proper authentication based on your organization's identity provider.
 
 ## Getting Help
 

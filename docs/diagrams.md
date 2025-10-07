@@ -143,14 +143,147 @@ sequenceDiagram
     GH->>B: POST coverage data
     B->>DB: Store coverage metrics
     B->>B: Update UI components
+```
+
+## Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Backstage Frontend
+    participant BA as Backstage Auth Backend
+    participant G as Google OAuth2
+    participant GCP as Google Cloud Platform
     
-    Note over B: Coverage visualization
-    B->>Dev: Display coverage percentage
-    B->>Dev: Show trends and flags
+    Note over U,GCP: Authentication Process
+    U->>B: Access Backstage URL
+    B->>U: Redirect to login page
+    U->>B: Click Sign in with Google
     
-    alt Coverage < 80%
-        B->>Dev: Flag as low resilience
+    B->>BA: Request auth URL
+    BA->>G: Generate OAuth2 auth URL
+    G->>BA: Return auth URL with state
+    BA->>B: Return auth URL
+    B->>U: Redirect to Google OAuth2
+    
+    U->>G: Authenticate with Google
+    G->>U: User consent screen
+    U->>G: Grant permissions
+    
+    G->>B: Redirect with auth code
+    B->>BA: Send auth code
+    BA->>G: Exchange code for tokens
+    G->>BA: Return access/ID tokens
+    
+    BA->>G: Verify token and get user profile
+    G->>BA: Return user information
+    BA->>BA: Create user session
+    BA->>B: Return session cookie
+    
+    B->>U: Redirect to Backstage dashboard
+    
+    Note over U,GCP: Subsequent Requests
+    U->>B: Access protected resources
+    B->>BA: Validate session
+    BA->>BA: Check user permissions
+    BA->>B: Allow/deny access
+    B->>U: Display authorized content
+```
+
+## Authentication Architecture on Google Cloud
+
+```mermaid
+graph TB
+    subgraph "User Access"
+        U[User Browser]
+        M[Mobile App]
     end
+    
+    subgraph "Backstage on GKE"
+        LB[Load Balancer with TLS]
+        FE[Frontend Pod]
+        BE[Backend Pod]
+        AUTH[Auth Service]
+    end
+    
+    subgraph "Authentication Providers"
+        GOOGLE[Google OAuth2]
+        AZURE[Azure AD]
+        GITHUB[GitHub OAuth]
+        CUSTOM[Custom OIDC]
+    end
+    
+    subgraph "Google Cloud Services"
+        IAM[Cloud IAM]
+        KMS[Cloud KMS]
+        SM[Secret Manager]
+    end
+    
+    subgraph "Session Storage"
+        REDIS[(Redis Cache)]
+        SQL[(Cloud SQL)]
+    end
+    
+    U --> LB
+    M --> LB
+    LB --> FE
+    FE --> BE
+    BE --> AUTH
+    
+    AUTH --> GOOGLE
+    AUTH --> AZURE
+    AUTH --> GITHUB
+    AUTH --> CUSTOM
+    
+    AUTH --> REDIS
+    AUTH --> SQL
+    
+    AUTH --> IAM
+    AUTH --> KMS
+    AUTH --> SM
+    
+    style U fill:#e3f2fd
+    style AUTH fill:#34a853
+    style GOOGLE fill:#ea4335
+    style IAM fill:#4285f4
+```
+
+## Role-Based Access Control (RBAC)
+
+```mermaid
+flowchart TD
+    subgraph "User Authentication"
+        A[User Login] --> B[Provider Verification]
+        B --> C[Token Validation]
+    end
+    
+    subgraph "Authorization Layer"
+        C --> D[Extract User Info]
+        D --> E[Map to Internal User]
+        E --> F[Assign Roles/Groups]
+    end
+    
+    subgraph "Permission System"
+        F --> G{Check Permissions}
+        G -->|Admin| H[Full Access]
+        G -->|Developer| I[Read/Write Code]
+        G -->|Viewer| J[Read Only]
+        G -->|Team Lead| K[Team Resources]
+    end
+    
+    subgraph "Resource Access"
+        H --> L[All Components]
+        I --> M[Team Components]
+        J --> N[Public Components]
+        K --> O[Team Management]
+    end
+    
+    style A fill:#e3f2fd
+    style G fill:#fff3e0
+    style H fill:#e8f5e8
+    style I fill:#e8f5e8
+    style J fill:#fce4ec
+    style K fill:#e8f5e8
 ```
 
 ## Scaffolder Template Workflow
@@ -193,7 +326,7 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A[GitHub Repos] -->|Webhooks/Actions| B[Backstage Plugins e.g., Code Coverage, Security Insights]
+    A[GitHub Repos] -->|Webhooks/Actions| B[Backstage Plugins: Code Coverage, Security Insights]
     B -->|API Calls/Data Processing| C[Custom Backend Plugin]
     C -->|Insert Queries| D[Cloud SQL PostgreSQL Database]
     E[Backstage UI] -->|Visualization| B
@@ -203,9 +336,9 @@ graph TD
 
 ```mermaid
 flowchart LR
-    D[Cloud SQL Database] -->|SQL Queries| F[LLM API e.g., Grok]
+    D[Cloud SQL Database] -->|SQL Queries| F[LLM API: Grok]
     F -->|Analysis/Trends| G[Insights Dashboard/Reports]
-    F -->|Decision Triggers| H[AI Agent e.g., LangChain]
+    F -->|Decision Triggers| H[AI Agent: LangChain]
     H -->|Proactive Actions| I[GitHub: Generate PR with Unit Tests]
     H -->|Notifications| J[Backstage UI/Alerts]
     style D fill:#0000FF,stroke:#333,stroke-width:2px

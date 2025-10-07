@@ -38,9 +38,9 @@ This flow uses LangChain chains to analyze stored data.
 ```mermaid
 graph TD
     A[Cloud SQL Database] -->|SQL Query| B[LangChain.js Chain]
-    B -->|Prompt Engineering| C[LLM e.g., Gemini]
+    B -->|Prompt Engineering| C[LLM: Gemini]
     C -->|Analysis Output| D[Backstage UI: Insights Tab]
-    E[User Query e.g., "Trends in coverage?"] --> B
+    E[User Query: Trends in coverage] --> B
     style A fill:#bbf,stroke:#333,stroke-width:2px
     style C fill:#ff9,stroke:#333,stroke-width:2px
     style D fill:#f9f,stroke:#333,stroke-width:2px
@@ -54,7 +54,7 @@ flowchart LR
     A[Cloud SQL Database] -->|Data Fetch| B[LangChain.js Agent]
     B -->|Decision Loop| C[LLM Reasoning]
     C -->|Tool Calls| D[Tools: GitHub API, Code Generator]
-    D -->|Action e.g., Create PR with Tests| E[GitHub Repo]
+    D -->|Action: Create PR with Tests| E[GitHub Repo]
     F[Trigger: Low Coverage Alert] --> B
     G[Backstage Scheduler/Webhook] --> B
     style A fill:#bbf,stroke:#333,stroke-width:2px
