@@ -26,6 +26,9 @@ This workshop is organized into focused modules for easier navigation and mainte
 5. **[Scaffolder Templates](./docs/backstage_scaffolder_templates.md)** - Create standardized project templates
 6. **[Storing GitHub Data for LLM Insights](./docs/storing_github_data_for_llm_insights.md)** - Advanced data analysis
 
+### Optional: AI/LLM Integration
+7. **[LLM Integrations with LangChain](./docs/llm_integrations.md)** - AI-powered analysis and automated actions (Optional advanced topic)
+
 ### Workshop Support
 - **[Visual Diagrams](./docs/diagrams.md)** - Architecture and workflow diagrams
 - **[Workshop Facilitation Guide](./docs/workshop_facilitation.md)** - Tips for workshop leaders
@@ -78,6 +81,7 @@ Once you complete the core workshop:
 - Explore the [Project Resilience Guide](./docs/project_resilience_guide.md) to add test coverage and security metrics
 - Try creating templates with the [Scaffolder Templates](./docs/backstage_scaffolder_templates.md) guide
 - Set up advanced analytics with [Storing GitHub Data for LLM Insights](./docs/storing_github_data_for_llm_insights.md)
+- **AI Integation:** Explore [LLM Integrations with LangChain](./docs/llm_integrations.md) for AI-powered analysis and automated actions
 - Scale your deployment for production use
 - Explore more plugins in the Backstage community directory
 
